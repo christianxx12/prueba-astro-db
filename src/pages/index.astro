@@ -1,0 +1,30 @@
+---
+import { db, User, Todo, Category } from "astro:db";
+import Layout from "../layouts/Layout.astro";
+import { eq } from "astro:db";
+
+const users = await db.select().from(User);
+const todos = await db
+  .select()
+  .from(Todo)
+  .innerJoin(User, eq(Todo.userId, User.id))
+  .innerJoin(Category, eq(Todo.categoryId, Category.id));
+
+console.log(todos);
+---
+
+<Layout title="home">
+  <h2>Todos</h2>
+
+  <ul>
+    {
+      todos.map((todo) => (
+        <li>
+          {`Título: ${todo.Todo.title},
+        Categoría: ${todo.Category.label},
+        Creado por: ${todo.User.username}`}
+        </li>
+      ))
+    }
+  </ul>
+</Layout>
