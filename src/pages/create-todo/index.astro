@@ -1,0 +1,87 @@
+---
+import { db, Category, Todo } from "astro:db";
+import Layout from "../../layouts/Layout.astro";
+
+const categories = await db.select().from(Category);
+
+if (Astro.request.method === "POST") {
+  // Analizar los datos del formulario
+  const formData = await Astro.request.formData();
+  const title = formData.get("title");
+  const description = formData.get("description");
+  const category_id = formData.get("category_id");
+  console.log({ title, description, category_id });
+  if (
+    typeof title === "string" &&
+    typeof description === "string" &&
+    typeof category_id === "string"
+  ) {
+    // insertar datos del formulario en la tabla Todo
+    await db.insert(Todo).values({
+      title,
+      description,
+      categoryId: category_id,
+      userId: "user02",
+    });
+  }
+}
+---
+
+<Layout title="create-todo">
+  <div class="max-w-lg lg:ms-auto mx-auto text-center">
+    <div class="py-16 px-7 rounded-md bg-white">
+      <h2 class="my-5">Crea tu TODO</h2>
+      <form method="POST">
+        <div class="gap-6">
+          <label for="title" class="float-left block font-normal text-lg"
+            >Titulo</label
+          >
+          <input
+            type="text"
+            id="title"
+            name="title"
+            placeholder="Titulo"
+            class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-700"
+          />
+
+          <div class="md:col-span-2">
+            <label
+              for="category_id"
+              class="float-left block font-normal text-lg">Categoria</label
+            >
+            <select
+              id="category_id"
+              name="category_id"
+              class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-700"
+            >
+              {
+                categories.map((category) => (
+                  <option value={category.id}>{category.label}</option>
+                ))
+              }
+            </select>
+          </div>
+          <div class="md:col-span-2">
+            <label
+              for="description"
+              class="float-left block font-normal text-lg">Descripción</label
+            >
+            <textarea
+              id="description"
+              name="description"
+              rows="5"
+              cols=""
+              class="w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:border-blue-700"
+            ></textarea>
+          </div>
+          <div class="md:col-span-2">
+            <button
+              class="py-3 text-base font-medium rounded text-white bg-blue-800 w-full hover:bg-blue-700 transition duration-300"
+              >Crear Todo</button
+            >
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</Layout>

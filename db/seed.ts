@@ -4,12 +4,12 @@ import { Category, db, Todo, User } from "astro:db";
 export default async function seed() {
   await db.insert(User).values([
     {
-      id: 1,
+      id: "user01",
       email: "pepito@gmail.com",
       username: "pepito",
     },
     {
-      id: 2,
+      id: "user02",
       email: "juan@gmail.com",
       username: "juan",
     },
@@ -17,29 +17,29 @@ export default async function seed() {
 
   await db.insert(Category).values([
     {
-      id: 1,
+      id: "category01",
       label: "productividad",
     },
     {
-      id: 2,
+      id: "category02",
       label: "estudio",
     },
   ]);
 
   await db.insert(Todo).values([
     {
-      id: 1,
+      id: "todo01",
       title: "Levantarse temprano",
       description: "Limpiar la casa antes de las 9:00 AM",
-      userId: 1,
-      categoryId: 1,
+      userId: "user01",
+      categoryId: "category01",
     },
     {
-      id: 2,
+      id: "todo02",
       title: "Estudiar Astro DB",
       description: "Estudiar Astro DB creando proyectos",
-      userId: 2,
-      categoryId: 2,
+      userId: "user02",
+      categoryId: "category02",
     },
   ]);
 }
